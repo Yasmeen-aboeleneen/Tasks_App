@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tasks_app/Views/Home/home_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color(0xFF181818),
       body: SafeArea(
@@ -100,9 +103,18 @@ class WelcomeScreen extends StatelessWidget {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: (Color(0xFF15B86c)),
-                    fixedSize: Size(330, 40),
+                    fixedSize: Size(w, h * .06),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return HomeScreen();
+                        },
+                      ),
+                    );
+                  },
                   child: Text(
                     "Let's Get Started",
                     style: TextStyle(
