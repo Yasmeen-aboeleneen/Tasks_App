@@ -3,8 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:tasks_app/Views/Home/home_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
-
+  WelcomeScreen({super.key});
+  TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
@@ -12,13 +12,13 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xFF181818),
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 12),
+                SizedBox(height: h * .044),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -87,6 +87,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 TextField(
+                  controller: controller,
                   style: TextStyle(color: Color(0xFFFFFcFc)),
                   decoration: InputDecoration(
                     hintText: 'e.g Celia Tarek',
@@ -106,14 +107,16 @@ class WelcomeScreen extends StatelessWidget {
                     fixedSize: Size(w, h * .06),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return HomeScreen();
-                        },
-                      ),
-                    );
+                    if (controller.text.trim().isNotEmpty) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return HomeScreen();
+                          },
+                        ),
+                      );
+                    }
                   },
                   child: Text(
                     "Let's Get Started",
