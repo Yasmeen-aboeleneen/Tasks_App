@@ -19,9 +19,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _loadUserName() async {
     final pref = await SharedPreferences.getInstance();
-      username = pref.getString('username');
+      
       setState(() {
-        
+        username = pref.getString('username');
       });
   }
 
