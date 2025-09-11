@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasks_app/Views/Home/home_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -115,9 +116,12 @@ class WelcomeScreen extends StatelessWidget {
                       backgroundColor: (Color(0xFF15B86c)),
                       fixedSize: Size(w, h * .06),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_key.currentState?.validate() ?? false) {
-                        Navigator.push(
+                        final pref = await SharedPreferences.getInstance();
+                        await pref.setString('username', controller.value.text);
+
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) {
