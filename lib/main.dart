@@ -8,7 +8,6 @@ import 'package:tasks_app/Views/welcome_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final pref = await SharedPreferences.getInstance();
-
   String? username = pref.getString('username');
   runApp(MyApp(username: username));
 }

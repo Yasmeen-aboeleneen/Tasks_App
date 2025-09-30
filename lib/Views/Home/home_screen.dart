@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tasks_app/Views/Home/add_task_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,20 +21,49 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _loadUserName() async {
     final pref = await SharedPreferences.getInstance();
-      
-      setState(() {
-        username = pref.getString('username');
-      });
+
+    setState(() {
+      username = pref.getString('username');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
     return Scaffold(
+      floatingActionButton: SizedBox(
+        height: h * .049,
+        width: w * .46,
+        child: FloatingActionButton.extended(
+          backgroundColor: Color(0xFF15B86c),
+          foregroundColor: Color(0xFFFFFFFF),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(35),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return AddTaskScreen();
+                },
+              ),
+            );
+          },
+          label: Text(
+            'Add New Task',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+          ),
+          icon: Icon(Icons.add),
+        ),
+      ),
       backgroundColor: Color(0xFF181818),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
@@ -63,6 +94,33 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ],
+                  ),
+                ],
+              ),
+              SizedBox(height: h * .03),
+              Text(
+                'Cela , Your work is ',
+                style: TextStyle(
+                  color: Color(0xFFFFFFFF),
+                  fontSize: 22,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    'almost done !',
+                    style: TextStyle(
+                      color: Color(0xFFFFFFFF),
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  SvgPicture.asset(
+                    'assets/images/wavingHand.svg',
+                    width: 25,
+                    height: 25,
                   ),
                 ],
               ),
