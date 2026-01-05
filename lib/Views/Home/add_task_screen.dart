@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasks_app/Views/Home/home_screen.dart';
@@ -38,12 +39,24 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           ),
           onPressed: () async {
             if (_key.currentState?.validate() ?? false) {
+              final task = <String, dynamic>{
+                'taskName': taskNameController.text,
+                'taskDescription': taskDescriptionController.text,
+                'ishighPriority': ishighPriority,
+              };
               final pref = await SharedPreferences.getInstance();
-              await pref.setString('username', taskNameController.value.text);
-              await pref.setString(
-                'username',
-                taskDescriptionController.value.text,
-              );
+              final taskJson = pref.getString('tasks');
+              List<dynamic> listOfTasks = [];
+              if (taskJson != null) {
+                listOfTasks = jsonDecode(taskJson);
+              }
+              listOfTasks.add(task);
+              final taskEncode = jsonEncode(listOfTasks);
+              await pref.setString('tasks', taskEncode);
+              // final finalTask = pref.getString('task');
+              // final taskAfterDecode =
+              //     jsonDecode(finalTask ?? '') as Map<String, dynamic>;
+              // print(taskAfterDecode);
 
               Navigator.pushReplacement(
                 context,

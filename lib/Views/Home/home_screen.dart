@@ -1,7 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tasks_app/Models/task_model.dart';
 import 'package:tasks_app/Views/Home/add_task_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,10 +16,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? username;
+  List<TaskModel> task = [];
   @override
   void initState() {
     super.initState();
     _loadUserName();
+    _loadTask();
   }
 
   void _loadUserName() async {
@@ -25,6 +30,26 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       username = pref.getString('username');
     });
+  }
+
+  void _loadTask() async {
+    final pref = await SharedPreferences.getInstance();
+
+    final finalTask = pref.getString('tasks');
+    if (finalTask != null) {
+      final taskAfterDecode = jsonDecode(finalTask) as List<dynamic>;
+      final tasks = taskAfterDecode.map((element) {
+        return TaskModel(
+          taskName: element['taskName'],
+          taskDescription: element['taskDescription'],
+          ishighPriority: element['ishighPriority'],
+        );
+      }).toList();
+
+      setState(() {
+        task = tasks;
+      });
+    }
   }
 
   @override
@@ -99,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: h * .03),
               Text(
-                'Cela , Your work is ',
+                '$username , Your work is ',
                 style: TextStyle(
                   color: Color(0xFFFFFFFF),
                   fontSize: 22,
@@ -124,6 +149,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
+              if (task.isNotEmpty)
+                Column(
+                  children: [
+                    Text(
+                      task[0].taskName,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      task[0].taskDescription,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      task[0].ishighPriority.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
             ],
           ),
         ),
