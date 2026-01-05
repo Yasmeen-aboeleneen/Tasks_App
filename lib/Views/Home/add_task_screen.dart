@@ -4,7 +4,7 @@ import 'package:tasks_app/Views/Home/home_screen.dart';
 
 // ignore: must_be_immutable
 class AddTaskScreen extends StatefulWidget {
-  AddTaskScreen({super.key});
+  const AddTaskScreen({super.key});
 
   @override
   State<AddTaskScreen> createState() => _AddTaskScreenState();
