@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tasks_app/Models/task_model.dart';
 import 'package:tasks_app/Views/Home/home_screen.dart';
 
 // ignore: must_be_immutable
@@ -39,6 +40,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           ),
           onPressed: () async {
             if (_key.currentState?.validate() ?? false) {
+              TaskModel model = TaskModel(
+                taskName: taskNameController.text,
+                taskDescription: taskDescriptionController.text,
+                ishighPriority: ishighPriority,
+              );
               final task = <String, dynamic>{
                 'taskName': taskNameController.text,
                 'taskDescription': taskDescriptionController.text,
@@ -50,7 +56,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               if (taskJson != null) {
                 listOfTasks = jsonDecode(taskJson);
               }
-              listOfTasks.add(task);
+              listOfTasks.add(model.convertToMap());
               final taskEncode = jsonEncode(listOfTasks);
               await pref.setString('tasks', taskEncode);
               // final finalTask = pref.getString('task');
