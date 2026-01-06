@@ -45,6 +45,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 taskDescription: taskDescriptionController.text,
                 ishighPriority: ishighPriority,
               );
+              // ignore: unused_local_variable
               final task = <String, dynamic>{
                 'taskName': taskNameController.text,
                 'taskDescription': taskDescriptionController.text,

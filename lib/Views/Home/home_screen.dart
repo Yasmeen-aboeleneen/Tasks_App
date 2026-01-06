@@ -38,16 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final finalTask = pref.getString('tasks');
     if (finalTask != null) {
       final taskAfterDecode = jsonDecode(finalTask) as List<dynamic>;
-      final tasks = taskAfterDecode.map((element) {
-        return TaskModel(
-          taskName: element['taskName'],
-          taskDescription: element['taskDescription'],
-          ishighPriority: element['ishighPriority'],
-        );
-      }).toList();
-
       setState(() {
-        task = tasks;
+        task = taskAfterDecode
+            .map((element) => TaskModel.fromJson(element))
+            .toList();
       });
     }
   }
