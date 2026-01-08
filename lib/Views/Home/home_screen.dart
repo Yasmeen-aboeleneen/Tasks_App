@@ -143,22 +143,56 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
+              SizedBox(height: h * .03),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: task.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Container(
+                        height: h * .09,
+                        width: w,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 94, 91, 91),
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: Column(
+                           mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              task[index].taskName,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            SizedBox(height: h * .02),
+                            Text(
+                              task[index].taskDescription,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
               if (task.isNotEmpty)
-                Column(
-                  children: [
-                    Text(
-                      task[0].taskName,
-                      style: TextStyle(color: Colors.white),
+                Container(
+                  height: h * .09,
+                  width: w,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 94, 91, 91),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Text(
+                    task[0].taskName,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text(
-                      task[0].taskDescription,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    Text(
-                      task[0].ishighPriority.toString(),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
+                  ),
                 ),
             ],
           ),
