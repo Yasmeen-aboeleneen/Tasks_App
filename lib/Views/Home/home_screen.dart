@@ -158,17 +158,50 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: const Color.fromARGB(255, 94, 91, 91),
                           borderRadius: BorderRadius.circular(25),
                         ),
-                        child: Column(
-                           mainAxisAlignment: MainAxisAlignment.center,
+                        child: Row(
                           children: [
-                            Text(
-                              task[index].taskName,
-                              style: TextStyle(color: Colors.white),
+                            Checkbox(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.circular(4),
+                              ),
+                              activeColor: Colors.green,
+                              value: task[index].isDone,
+                              onChanged: (bool? value) async {
+                                setState(() {
+                                  task[index].isDone = value ?? true;
+                                });
+                                final pref =
+                                    await SharedPreferences.getInstance();
+                                final updatedTask = task
+                                    .map((element) => element.convertToMap())
+                                    .toList();
+                                pref.setString(
+                                  'tasks',
+                                  jsonEncode(updatedTask),
+                                );
+                              },
                             ),
-                            SizedBox(height: h * .02),
-                            Text(
-                              task[index].taskDescription,
-                              style: TextStyle(color: Colors.white),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  task[index].taskName,
+                                  style: TextStyle(
+                                    color: task[index].isDone
+                                        ? Color(0xFFA0A0A0)
+                                        : Colors.white,
+                                    decoration: task[index].isDone
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                    decorationColor: Color(0xFFA0A0A0),
+                                  ),
+                                ),
+                                SizedBox(height: h * .01),
+                                Text(
+                                  task[index].taskDescription,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -177,23 +210,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-              if (task.isNotEmpty)
-                Container(
-                  height: h * .09,
-                  width: w,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 94, 91, 91),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Text(
-                    task[0].taskName,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+              // if (task.isNotEmpty)
+              //   Container(
+              //     height: h * .09,
+              //     width: w,
+              //     alignment: Alignment.center,
+              //     decoration: BoxDecoration(
+              //       color: const Color.fromARGB(255, 94, 91, 91),
+              //       borderRadius: BorderRadius.circular(25),
+              //     ),
+              //     child: Center(
+              //       child: Text(
+              //         task[0].taskName,
+              //         style: TextStyle(
+              //           color: Colors.white,
+              //           fontWeight: FontWeight.bold,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
             ],
           ),
         ),
