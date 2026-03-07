@@ -60,10 +60,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               listOfTasks.add(model.convertToMap());
               final taskEncode = jsonEncode(listOfTasks);
               await pref.setString('tasks', taskEncode);
-              // final finalTask = pref.getString('task');
-              // final taskAfterDecode =
-              //     jsonDecode(finalTask ?? '') as Map<String, dynamic>;
-              // print(taskAfterDecode);
 
               Navigator.pushReplacement(
                 context,
@@ -144,12 +140,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   SizedBox(height: h * .01),
                   TextFormField(
                     controller: taskDescriptionController,
-                    validator: (String? value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your task description';
-                      }
-                      return null;
-                    },
+                    // validator: (String? value) {
+                    //   if (value == null || value.trim().isEmpty) {
+                    //     return 'Please enter your task description';
+                    //   }
+                    //   return null;
+                    // },
                     style: TextStyle(color: Color(0xFFFFFcFc)),
 
                     maxLines: 9,

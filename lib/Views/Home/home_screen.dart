@@ -17,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String? username;
   List<TaskModel> task = [];
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -33,6 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _loadTask() async {
+    setState(() {
+      isLoading = true;
+    });
+    await Future.delayed(Duration(seconds: 5));
     final pref = await SharedPreferences.getInstance();
 
     final finalTask = pref.getString('tasks');
@@ -42,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
         task = taskAfterDecode
             .map((element) => TaskModel.fromJson(element))
             .toList();
+        isLoading = false;
       });
     }
   }
@@ -60,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(35),
           ),
-          onPressed: () {
+          onPressed: () async {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -69,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             );
+            return _loadTask();
           },
           label: Text(
             'Add New Task',
@@ -144,118 +151,128 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               SizedBox(height: h * .03),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: task.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Container(
-                        height: h * .09,
-                        width: w,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 94, 91, 91),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Row(
-                          children: [
-                            Checkbox(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadiusGeometry.circular(4),
-                              ),
-                              activeColor: Colors.green,
-                              value: task[index].isDone,
-                              onChanged: (bool? value) async {
-                                setState(() {
-                                  task[index].isDone = value ?? true;
-                                });
-                                final pref =
-                                    await SharedPreferences.getInstance();
-                                final updatedTask = task
-                                    .map((element) => element.convertToMap())
-                                    .toList();
-                                pref.setString(
-                                  'tasks',
-                                  jsonEncode(updatedTask),
-                                );
-                              },
-                            ),
-                            SizedBox(width: w * .03),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      task[index].taskName,
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                        fontSize: w * .05,
-                                        fontWeight: FontWeight.bold,
-                                        overflow: TextOverflow.ellipsis,
-                                        color: task[index].isDone
-                                            ? Color(0xFFA0A0A0)
-                                            : Colors.white,
-                                        decoration: task[index].isDone
-                                            ? TextDecoration.lineThrough
-                                            : TextDecoration.none,
-                                        decorationColor: Color(0xFFA0A0A0),
-                                      ),
-                                    ),
-                                    SizedBox(height: h * .01),
-                                    Text(
-                                      task[index].taskDescription,
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                        fontSize: w * .035,
-                                        fontWeight: FontWeight.w500,
-                                        color: task[index].isDone
-                                            ? Color(0xFFA0A0A0)
-                                            : Colors.white,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.more_vert,
-                                color: task[index].isDone
-                                    ? Color(0xFFA0A0A0)
-                                    : const Color.fromARGB(255, 241, 239, 239),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+              Text(
+                'My Tasks',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: w * .06,
                 ),
               ),
-              // if (task.isNotEmpty)
-              //   Container(
-              //     height: h * .09,
-              //     width: w,
-              //     alignment: Alignment.center,
-              //     decoration: BoxDecoration(
-              //       color: const Color.fromARGB(255, 94, 91, 91),
-              //       borderRadius: BorderRadius.circular(25),
-              //     ),
-              //     child: Center(
-              //       child: Text(
-              //         task[0].taskName,
-              //         style: TextStyle(
-              //           color: Colors.white,
-              //           fontWeight: FontWeight.bold,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
+              SizedBox(height: h * .02),
+              Expanded(
+                child: isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      )
+                    : ListView.separated(
+                        padding: EdgeInsets.only(bottom: 60),
+                        itemCount: task.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Container(
+                              height: h * .09,
+                              width: w,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 94, 91, 91),
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadiusGeometry.circular(4),
+                                    ),
+                                    activeColor: Colors.green,
+                                    value: task[index].isDone,
+                                    onChanged: (bool? value) async {
+                                      setState(() {
+                                        task[index].isDone = value ?? true;
+                                      });
+                                      final pref =
+                                          await SharedPreferences.getInstance();
+                                      final updatedTask = task
+                                          .map(
+                                            (element) => element.convertToMap(),
+                                          )
+                                          .toList();
+                                      pref.setString(
+                                        'tasks',
+                                        jsonEncode(updatedTask),
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(width: w * .03),
+                                  Expanded(
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            task[index].taskName,
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                              fontSize: w * .05,
+                                              fontWeight: FontWeight.bold,
+                                              overflow: TextOverflow.ellipsis,
+                                              color: task[index].isDone
+                                                  ? Color(0xFFA0A0A0)
+                                                  : Colors.white,
+                                              decoration: task[index].isDone
+                                                  ? TextDecoration.lineThrough
+                                                  : TextDecoration.none,
+                                              decorationColor: Color(
+                                                0xFFA0A0A0,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: h * .01),
+                                          Text(
+                                            task[index].taskDescription,
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                              fontSize: w * .035,
+                                              fontWeight: FontWeight.w500,
+                                              color: task[index].isDone
+                                                  ? Color(0xFFA0A0A0)
+                                                  : Colors.white,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.more_vert,
+                                      color: task[index].isDone
+                                          ? Color(0xFFA0A0A0)
+                                          : const Color.fromARGB(
+                                              255,
+                                              241,
+                                              239,
+                                              239,
+                                            ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return SizedBox(height: 8);
+                        },
+                      ),
+              ),
             ],
           ),
         ),
