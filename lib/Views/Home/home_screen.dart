@@ -181,27 +181,54 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                               },
                             ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  task[index].taskName,
-                                  style: TextStyle(
-                                    color: task[index].isDone
-                                        ? Color(0xFFA0A0A0)
-                                        : Colors.white,
-                                    decoration: task[index].isDone
-                                        ? TextDecoration.lineThrough
-                                        : TextDecoration.none,
-                                    decorationColor: Color(0xFFA0A0A0),
-                                  ),
+                            SizedBox(width: w * .03),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      task[index].taskName,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontSize: w * .05,
+                                        fontWeight: FontWeight.bold,
+                                        overflow: TextOverflow.ellipsis,
+                                        color: task[index].isDone
+                                            ? Color(0xFFA0A0A0)
+                                            : Colors.white,
+                                        decoration: task[index].isDone
+                                            ? TextDecoration.lineThrough
+                                            : TextDecoration.none,
+                                        decorationColor: Color(0xFFA0A0A0),
+                                      ),
+                                    ),
+                                    SizedBox(height: h * .01),
+                                    Text(
+                                      task[index].taskDescription,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: w * .035,
+                                        fontWeight: FontWeight.w500,
+                                        color: task[index].isDone
+                                            ? Color(0xFFA0A0A0)
+                                            : Colors.white,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: h * .01),
-                                Text(
-                                  task[index].taskDescription,
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.more_vert,
+                                color: task[index].isDone
+                                    ? Color(0xFFA0A0A0)
+                                    : const Color.fromARGB(255, 241, 239, 239),
+                              ),
                             ),
                           ],
                         ),
