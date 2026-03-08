@@ -57,6 +57,26 @@ class _HomeScreenState extends State<HomeScreen> {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/images/home_icon.svg'),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/images/todo_icon.svg'),
+            label: 'ToDo',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/images/completed_icon.svg'),
+            label: 'Completed',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/images/profile_icon.svg'),
+            label: 'Profile',
+          ),
+        ],
+      ),
       floatingActionButton: SizedBox(
         height: h * .049,
         width: w * .46,
