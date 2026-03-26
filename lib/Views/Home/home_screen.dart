@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasks_app/Models/task_model.dart';
 import 'package:tasks_app/Views/Home/add_task_screen.dart';
@@ -37,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       isLoading = true;
     });
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 0));
     final pref = await SharedPreferences.getInstance();
 
     final finalTask = pref.getString('tasks');
@@ -58,21 +59,28 @@ class _HomeScreenState extends State<HomeScreen> {
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color(0xFF181818),
+        type: BottomNavigationBarType.fixed,
+        unselectedItemColor: Color(0xFFc6c6c6),
+        selectedItemColor: Color(0xFF15B86c),
         items: [
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/images/home_icon.svg'),
+            icon: SvgPicture.asset('assets/images/home.svg'),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/images/todo_icon.svg'),
-            label: 'ToDo',
+            icon: SvgPicture.asset('assets/images/todo.svg'),
+            label: 'To Do',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/images/completed_icon.svg'),
+            icon: SvgPicture.asset('assets/images/completed.svg'),
             label: 'Completed',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/images/profile_icon.svg'),
+            icon: SvgPicture.asset(
+              'assets/images/profile.svg',
+              color: Color(0xFFc6c6c6),
+            ),
             label: 'Profile',
           ),
         ],
@@ -192,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           return Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Container(
-                              height: h * .09,
+                              height: h * .099,
                               width: w,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
@@ -227,46 +235,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   SizedBox(width: w * .03),
                                   Expanded(
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            task[index].taskName,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                              fontSize: w * .05,
-                                              fontWeight: FontWeight.bold,
-                                              overflow: TextOverflow.ellipsis,
-                                              color: task[index].isDone
-                                                  ? Color(0xFFA0A0A0)
-                                                  : Colors.white,
-                                              decoration: task[index].isDone
-                                                  ? TextDecoration.lineThrough
-                                                  : TextDecoration.none,
-                                              decorationColor: Color(
-                                                0xFFA0A0A0,
-                                              ),
-                                            ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          task[index].taskName,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                            fontSize: w * .05,
+                                            fontWeight: FontWeight.bold,
+                                            overflow: TextOverflow.ellipsis,
+                                            color: task[index].isDone
+                                                ? Color(0xFFA0A0A0)
+                                                : Colors.white,
+                                            decoration: task[index].isDone
+                                                ? TextDecoration.lineThrough
+                                                : TextDecoration.none,
+                                            decorationColor: Color(0xFFA0A0A0),
                                           ),
-                                          SizedBox(height: h * .01),
-                                          Text(
-                                            task[index].taskDescription,
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              fontSize: w * .035,
-                                              fontWeight: FontWeight.w500,
-                                              color: task[index].isDone
-                                                  ? Color(0xFFA0A0A0)
-                                                  : Colors.white,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                        ),
+                                        SizedBox(height: h * .01),
+                                        Text(
+                                          task[index].taskDescription,
+                                          maxLines: 2,
+                                          style: TextStyle(
+                                            fontSize: w * .035,
+                                            fontWeight: FontWeight.w500,
+                                            color: task[index].isDone
+                                                ? Color(0xFFA0A0A0)
+                                                : Colors.white,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   IconButton(
