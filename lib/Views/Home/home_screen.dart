@@ -48,17 +48,20 @@ class _HomeScreenState extends State<HomeScreen> {
         task = taskAfterDecode
             .map((element) => TaskModel.fromJson(element))
             .toList();
-        isLoading = false;
+       
       });
     }
+    setState(() {
+       isLoading = false;
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Color(0xFF181818),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -215,9 +218,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         SizedBox(height: h * .01),
+                                        if(task[index].taskDescription.isNotEmpty)
                                         Text(
                                           task[index].taskDescription,
-                                          maxLines: 2,
+                                          maxLines: 1,
                                           style: TextStyle(
                                             fontSize: w * .035,
                                             fontWeight: FontWeight.w500,

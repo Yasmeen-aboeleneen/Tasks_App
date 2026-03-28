@@ -69,7 +69,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           ),
         ),
       ),
-      backgroundColor: Color(0xFF181818),
+
       appBar: AppBar(
         backgroundColor: Color(0xFF181818),
         foregroundColor: Color(0xFFFFFFFF),
