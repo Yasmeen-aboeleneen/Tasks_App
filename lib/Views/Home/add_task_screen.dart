@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasks_app/Models/task_model.dart';
-import 'package:tasks_app/Views/Home/home_screen.dart';
 
 // ignore: must_be_immutable
 class AddTaskScreen extends StatefulWidget {
@@ -61,14 +60,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               final taskEncode = jsonEncode(listOfTasks);
               await pref.setString('tasks', taskEncode);
 
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return HomeScreen();
-                  },
-                ),
-              );
+              Navigator.of(context).pop(true);
             }
           },
           child: Text(

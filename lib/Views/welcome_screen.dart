@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tasks_app/Views/Home/home_screen.dart';
+import 'package:tasks_app/Views/main_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   WelcomeScreen({super.key});
@@ -125,7 +125,7 @@ class WelcomeScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) {
-                              return HomeScreen();
+                              return MainScreen();
                             },
                           ),
                         );

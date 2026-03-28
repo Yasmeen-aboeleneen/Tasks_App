@@ -58,60 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF181818),
-        type: BottomNavigationBarType.fixed,
-        unselectedItemColor: Color(0xFFc6c6c6),
-        selectedItemColor: Color(0xFF15B86c),
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/images/home.svg'),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/images/todo.svg'),
-            label: 'To Do',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/images/completed.svg'),
-            label: 'Completed',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'assets/images/profile.svg',
-              color: Color(0xFFc6c6c6),
-            ),
-            label: 'Profile',
-          ),
-        ],
-      ),
-      floatingActionButton: SizedBox(
-        height: h * .049,
-        width: w * .46,
-        child: FloatingActionButton.extended(
-          backgroundColor: Color(0xFF15B86c),
-          foregroundColor: Color(0xFFFFFFFF),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(35),
-          ),
-          onPressed: () async {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return AddTaskScreen();
-                },
-              ),
-            );
-            return _loadTask();
-          },
-          label: Text(
-            'Add New Task',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-          ),
-          icon: Icon(Icons.add),
-        ),
-      ),
       backgroundColor: Color(0xFF181818),
       body: SafeArea(
         child: Padding(
@@ -192,6 +138,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: isLoading
                     ? Center(
                         child: CircularProgressIndicator(color: Colors.white),
+                      )
+                    : task.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No Data',
+                          style: TextStyle(
+                            color: Color(0xFFc6c6c6),
+                            fontWeight: FontWeight.bold,
+                            fontSize: w * .1,
+                          ),
+                        ),
                       )
                     : ListView.separated(
                         padding: EdgeInsets.only(bottom: 60),
@@ -299,6 +256,35 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+        ),
+      ),
+      floatingActionButton: SizedBox(
+        height: h * .049,
+        width: w * .46,
+        child: FloatingActionButton.extended(
+          backgroundColor: Color(0xFF15B86c),
+          foregroundColor: Color(0xFFFFFFFF),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(35),
+          ),
+          onPressed: () async {
+            final bool? result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return AddTaskScreen();
+                },
+              ),
+            );
+            if (result != null && result) {
+              _loadTask();
+            }
+          },
+          label: Text(
+            'Add New Task',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+          ),
+          icon: Icon(Icons.add),
         ),
       ),
     );
