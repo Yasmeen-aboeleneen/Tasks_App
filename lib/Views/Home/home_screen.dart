@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasks_app/Models/task_model.dart';
 import 'package:tasks_app/Views/Home/add_task_screen.dart';
+import 'package:tasks_app/Widgets/task_list_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,10 +19,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? username;
-  List<TaskModel> task = [];
+  List<TaskModel> tasks = [];
   bool isLoading = false;
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     _loadUserName();
     _loadTask();
@@ -45,17 +48,15 @@ class _HomeScreenState extends State<HomeScreen> {
     if (finalTask != null) {
       final taskAfterDecode = jsonDecode(finalTask) as List<dynamic>;
       setState(() {
-        task = taskAfterDecode
+        tasks = taskAfterDecode
             .map((element) => TaskModel.fromJson(element))
             .toList();
-       
       });
     }
     setState(() {
-       isLoading = false;
+      isLoading = false;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -142,120 +143,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? Center(
                         child: CircularProgressIndicator(color: Colors.white),
                       )
-                    : task.isEmpty
-                    ? Center(
-                        child: Text(
-                          'No Data',
-                          style: TextStyle(
-                            color: Color(0xFFc6c6c6),
-                            fontWeight: FontWeight.bold,
-                            fontSize: w * .1,
-                          ),
-                        ),
-                      )
-                    : ListView.separated(
-                        padding: EdgeInsets.only(bottom: 60),
-                        itemCount: task.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Container(
-                              height: h * .099,
-                              width: w,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 94, 91, 91),
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              child: Row(
-                                children: [
-                                  Checkbox(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(4),
-                                    ),
-                                    activeColor: Colors.green,
-                                    value: task[index].isDone,
-                                    onChanged: (bool? value) async {
-                                      setState(() {
-                                        task[index].isDone = value ?? true;
-                                      });
-                                      final pref =
-                                          await SharedPreferences.getInstance();
-                                      final updatedTask = task
-                                          .map(
-                                            (element) => element.convertToMap(),
-                                          )
-                                          .toList();
-                                      pref.setString(
-                                        'tasks',
-                                        jsonEncode(updatedTask),
-                                      );
-                                    },
-                                  ),
-                                  SizedBox(width: w * .03),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          task[index].taskName,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                            fontSize: w * .05,
-                                            fontWeight: FontWeight.bold,
-                                            overflow: TextOverflow.ellipsis,
-                                            color: task[index].isDone
-                                                ? Color(0xFFA0A0A0)
-                                                : Colors.white,
-                                            decoration: task[index].isDone
-                                                ? TextDecoration.lineThrough
-                                                : TextDecoration.none,
-                                            decorationColor: Color(0xFFA0A0A0),
-                                          ),
-                                        ),
-                                        SizedBox(height: h * .01),
-                                        if(task[index].taskDescription.isNotEmpty)
-                                        Text(
-                                          task[index].taskDescription,
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                            fontSize: w * .035,
-                                            fontWeight: FontWeight.w500,
-                                            color: task[index].isDone
-                                                ? Color(0xFFA0A0A0)
-                                                : Colors.white,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.more_vert,
-                                      color: task[index].isDone
-                                          ? Color(0xFFA0A0A0)
-                                          : const Color.fromARGB(
-                                              255,
-                                              241,
-                                              239,
-                                              239,
-                                            ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
+                    : TaskListWidget(
+                        tasks: tasks,
+                        onTap: (value, index) async {
+                          setState(() {
+                            tasks[index!].isDone = value ?? true;
+                          });
+                          final pref = await SharedPreferences.getInstance();
+                          final updatedTask = tasks
+                              .map((element) => element.convertToMap())
+                              .toList();
+                          pref.setString('tasks', jsonEncode(updatedTask));
                         },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return SizedBox(height: 8);
-                        },
+                        emptyMessege: 'No Data',
                       ),
               ),
             ],

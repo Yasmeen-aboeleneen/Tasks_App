@@ -39,7 +39,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           ),
           onPressed: () async {
             if (_key.currentState?.validate() ?? false) {
+              final pref = await SharedPreferences.getInstance();
+              final taskJson = pref.getString('tasks');
+              List<dynamic> listOfTasks = [];
+              if (taskJson != null) {
+                listOfTasks = jsonDecode(taskJson);
+              }
               TaskModel model = TaskModel(
+                id: listOfTasks.length + 1,
                 taskName: taskNameController.text,
                 taskDescription: taskDescriptionController.text,
                 ishighPriority: ishighPriority,
@@ -50,12 +57,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 'taskDescription': taskDescriptionController.text,
                 'ishighPriority': ishighPriority,
               };
-              final pref = await SharedPreferences.getInstance();
-              final taskJson = pref.getString('tasks');
-              List<dynamic> listOfTasks = [];
-              if (taskJson != null) {
-                listOfTasks = jsonDecode(taskJson);
-              }
+
               listOfTasks.add(model.convertToMap());
               final taskEncode = jsonEncode(listOfTasks);
               await pref.setString('tasks', taskEncode);
@@ -71,15 +73,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       ),
 
       appBar: AppBar(
-        backgroundColor: Color(0xFF181818),
-        foregroundColor: Color(0xFFFFFFFF),
         title: Text('New Task'),
-        titleTextStyle: TextStyle(
-          color: Color(0xFFFFFFFF),
-          fontSize: 24,
-          fontWeight: FontWeight.w600,
-        ),
-        centerTitle: true,
+        leading: Icon(Icons.arrow_back_ios),
+
         toolbarHeight: h * .08,
       ),
       body: SafeArea(
